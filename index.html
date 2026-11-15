@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Site de Bairro · Sites para comércios de bairro em Florianópolis</title>
+<meta name="description" content="Sites de uma página para comércios da Grande Florianópolis, com botão direto pro WhatsApp. Você vê a prévia antes de pagar e o site fica no ar em até 3 dias úteis.">
+<link rel="icon" href="img/marca/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --laranja: #d9531c;        /* fundo do topo: escuro o bastante pro texto creme */
+    --laranja-vivo: #ff6b35;   /* o laranja da marca: < > e _ do logo, detalhes */
+    --laranja-btn: #e35a1f;
+    --azul: #1d3a5f;
+    --azul-escuro: #142b47;
+    --creme: #f6efe4;
+    --creme-2: #efe3d0;
+    --pessego: #f4c39a;
+    --grafite: #1b2226;
+    --texto: #1d3a5f;
+    --wrap: min(100% - 48px, 1180px);
+    --r: 18px;
+    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --body: "Figtree", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+  body { margin: 0; font: 400 17px/1.55 var(--body); color: var(--texto); background: var(--creme); -webkit-font-smoothing: antialiased; }
+  img, svg { display: block; max-width: 100%; }
+  a { color: inherit; }
+  .wrap { width: var(--wrap); margin-inline: auto; }
+  h1, h2, h3 { font-family: var(--display); font-optical-sizing: auto; margin: 0; letter-spacing: -0.025em; line-height: 1.04; }
+  h2 { font-size: clamp(32px, 3.4vw + 12px, 52px); font-weight: 800; color: var(--azul); }
+  h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; }
+  p { margin: 0; }
+  .skip { position: absolute; left: -999px; }
+  .skip:focus { left: 16px; top: 16px; z-index: 50; background: var(--creme); padding: 8px 12px; border-radius: 8px; }
+
+  /* botões */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 52px; padding: 0 26px; border-radius: 999px; font: 600 17px/1 var(--body); text-decoration: none; border: 0; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(0) scale(.98); }
+  .btn svg { width: 18px; height: 18px; transition: transform .15s ease; }
+  .btn:hover svg { transform: translateX(3px); }
+  .btn--creme { background: var(--creme); color: var(--azul); }
+  .btn--creme:hover { box-shadow: 0 8px 20px rgb(0 0 0 / .15); }
+  .btn--laranja { background: var(--laranja-btn); color: #fff; }
+  .btn--laranja:hover { background: #cf4e17; }
+  .btn--azul { background: var(--azul); color: var(--creme); height: 44px; padding: 0 20px; font-size: 15px; }
+  .btn--azul:hover { background: var(--azul-escuro); }
+  :focus-visible { outline: 3px solid var(--laranja-vivo); outline-offset: 3px; border-radius: 6px; }
+
+  /* topo: barra creme com o logo (o < > e o _ laranjas precisam de fundo claro) */
+  .nav { position: sticky; top: 0; z-index: 20; background: var(--creme); border-bottom: 1px solid rgb(29 58 95 / .1); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 68px; }
+  .nav__logo img { height: 26px; width: auto; }
+  .nav__links { display: flex; align-items: center; gap: 28px; }
+  .nav__links a:not(.btn) { text-decoration: none; font-size: 15px; font-weight: 500; position: relative; }
+  .nav__links a:not(.btn)::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; background: var(--laranja-vivo); transform: scaleX(0); transform-origin: left; transition: transform .2s ease; }
+  .nav__links a:not(.btn):hover::after { transform: scaleX(1); }
+  .nav .btn { white-space: nowrap; }
+  @media (max-width: 860px) { .nav__links a:not(.btn) { display: none; } .nav__logo img { height: 20px; } }
+  @media (max-width: 400px) { .nav .wrap { gap: 12px; } .nav__logo img { height: 17px; } .nav .btn { height: 40px; padding: 0 14px; font-size: 14px; } }
+
+  /* hero laranja */
+  .hero { background: var(--laranja); color: var(--creme); overflow: hidden; }
+  .hero .wrap { display: grid; grid-template-columns: 1fr 1.1fr; align-items: center; gap: 48px; min-height: calc(100svh - 68px); padding-block: 48px; }
+  .hero__phone { position: relative; display: grid; place-items: center; min-height: 520px; }
+  .phone { width: min(300px, 70vw); aspect-ratio: 390 / 844; padding: 10px; border-radius: 42px; background: #111; box-shadow: 0 30px 60px rgb(60 20 0 / .35), inset 0 0 0 2px #333; transform: rotate(-9deg); }
+  .phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 32px; }
+  .spark { position: absolute; left: 6%; top: 52%; width: 70px; color: var(--creme); }
+  .spark--b { left: auto; right: 8%; top: 14%; transform: scaleX(-1) rotate(20deg); }
+  .hero h1 { font-size: clamp(42px, 5.2vw + 8px, 84px); font-weight: 800; letter-spacing: -0.035em; }
+  .hero__lead { margin: 24px 0 32px; font-size: clamp(18px, .5vw + 15px, 21px); font-weight: 500; max-width: 30ch; }
+  .hero__nota { margin-top: 16px; font-size: 15px; opacity: .92; }
+  @media (max-width: 860px) {
+    .hero .wrap { grid-template-columns: 1fr; min-height: 0; padding-block: 40px 56px; gap: 8px; }
+    .hero__text { order: -1; }
+    .hero__phone { min-height: 0; padding-top: 32px; }
+    .phone { width: min(230px, 62vw); }
+  }
+
+  /* faixa de vantagens */
+  .vantagens { background: var(--creme); border-bottom: 1px solid rgb(29 58 95 / .12); }
+  .vantagens .wrap { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .vantagem { padding: 40px 28px; text-align: center; display: grid; justify-items: center; gap: 10px; }
+  .vantagem + .vantagem { border-left: 1px solid rgb(217 83 28 / .35); }
+  .vantagem svg { width: 40px; height: 40px; color: var(--azul); }
+  .vantagem p { font-size: 15px; max-width: 24ch; }
+  @media (max-width: 860px) {
+    .vantagens .wrap { grid-template-columns: 1fr 1fr; }
+    .vantagem { padding: 28px 12px; }
+    .vantagem + .vantagem { border-left: 0; }
+    .vantagem:nth-child(even) { border-left: 1px solid rgb(217 83 28 / .35); }
+    .vantagem:nth-child(n+3) { border-top: 1px solid rgb(217 83 28 / .35); }
+  }
+
+  /* visibilidade + ilustração das fachadas */
+  .bairro { padding-top: 88px; background: var(--creme); }
+  .bairro__head { display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: center; margin-bottom: 40px; }
+  .bairro__head p { border-left: 2px solid var(--azul); padding-left: 24px; font-size: 18px; }
+  .rua { position: relative; background: linear-gradient(var(--creme) 0 10%, var(--creme-2) 10% 100%); }
+  .rua svg { width: 100%; height: auto; }
+  .rua__cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: var(--wrap); margin: -64px auto 0; position: relative; padding-bottom: 72px; }
+  .rua__card { background: var(--creme); border-radius: var(--r); padding: 20px 22px; text-align: center; box-shadow: 0 10px 30px rgb(29 58 95 / .12); transition: transform .2s ease; }
+  .rua__card:hover { transform: translateY(-3px); }
+  .rua__card strong { display: block; font-family: var(--display); font-size: 19px; margin-bottom: 4px; }
+  .rua__card p { font-size: 15px; }
+  @media (max-width: 860px) {
+    .bairro { padding-top: 56px; }
+    .bairro__head { grid-template-columns: 1fr; gap: 20px; }
+    .rua__cards { grid-template-columns: 1fr; margin-top: 16px; gap: 12px; }
+  }
+
+  /* prévias */
+  .previas { padding: 96px 0; border-top: 1px solid rgb(29 58 95 / .12); }
+  .previas__top { display: grid; grid-template-columns: 1fr 1.35fr; gap: 56px; align-items: center; }
+  .previas__top p { margin-top: 20px; font-size: 18px; max-width: 36ch; }
+  .previas__top .nota { margin-top: 12px; font-size: 14px; opacity: .8; }
+  .janela { background: #fff; border-radius: var(--r); overflow: hidden; box-shadow: 0 24px 50px rgb(29 58 95 / .18); }
+  .janela__barra { display: flex; gap: 7px; padding: 12px 16px; background: var(--creme-2); }
+  .janela__barra i { width: 11px; height: 11px; border-radius: 50%; background: #e8604c; }
+  .janela__barra i:nth-child(2) { background: #f2b33d; } .janela__barra i:nth-child(3) { background: #3fb950; }
+  .janela img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
+  .galeria { margin-top: 64px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; }
+  .mini { text-decoration: none; }
+  .mini__tela { aspect-ratio: 390 / 600; border-radius: 22px; padding: 6px; background: #111; overflow: hidden; transition: transform .2s ease; }
+  .mini__tela img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 17px; transition: transform .3s ease; }
+  .mini:hover .mini__tela { transform: translateY(-4px); }
+  .mini:hover .mini__tela img { transform: scale(1.03); }
+  .mini strong { display: block; margin-top: 12px; font-family: var(--display); font-size: 17px; }
+  .mini span { font-size: 14px; opacity: .8; }
+  @media (max-width: 860px) {
+    .previas { padding: 64px 0; }
+    .previas__top { grid-template-columns: 1fr; gap: 32px; }
+    .galeria { grid-template-columns: repeat(2, 1fr); gap: 20px 14px; margin-top: 40px; }
+  }
+
+  /* como funciona */
+  .como { padding: 96px 0; border-top: 1px solid rgb(29 58 95 / .12); text-align: center; }
+  .como > .wrap > p { margin-top: 12px; font-size: 18px; }
+  .passos { list-style: none; padding: 0; margin: 56px 0 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; counter-reset: passo; }
+  .passo { position: relative; display: grid; justify-items: center; gap: 12px; }
+  .passo__icone { width: 84px; height: 84px; border-radius: 50%; background: var(--pessego); display: grid; place-items: center; transition: transform .2s ease; }
+  .passo:hover .passo__icone { transform: translateY(-3px) rotate(-4deg); }
+  .passo__icone svg { width: 36px; height: 36px; color: var(--azul); }
+  .passo + .passo::before { content: "→"; position: absolute; left: -24px; top: 28px; width: 24px; font-size: 22px; color: var(--azul); }
+  .passo h3 { font-size: 20px; }
+  .passo p { font-size: 15px; max-width: 24ch; }
+  @media (max-width: 860px) {
+    .como { padding: 64px 0; }
+    .passos { grid-template-columns: 1fr 1fr; gap: 36px 16px; }
+    .passo + .passo::before { display: none; }
+  }
+
+  /* dúvidas */
+  .duvidas { padding: 96px 0; background: var(--creme-2); }
+  .duvidas .wrap { display: grid; grid-template-columns: 1fr 1.5fr; gap: 56px; }
+  .duvidas__lado p { margin-top: 16px; font-size: 18px; }
+  .faq { display: grid; gap: 0; }
+  .faq div { padding: 20px 0; border-bottom: 1px solid rgb(29 58 95 / .18); }
+  .faq div:first-child { padding-top: 0; }
+  .faq h3 { font-size: 19px; margin-bottom: 6px; }
+  @media (max-width: 860px) { .duvidas { padding: 64px 0; } .duvidas .wrap { grid-template-columns: 1fr; gap: 32px; } }
+
+  /* pedido: fundo azul com a ponte */
+  .pedido { position: relative; background: var(--azul); color: var(--creme); overflow: hidden; }
+  .pedido .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; padding: 88px 0 260px; }
+  .pedido h2 { color: var(--creme); }
+  .pedido__texto { border-right: 1px solid rgb(246 239 228 / .3); padding-right: 48px; }
+  .pedido__texto p { margin-top: 20px; font-size: 18px; max-width: 34ch; }
+  .ponte { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: auto; color: var(--creme); }
+  form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-content: start; }
+  form .full { grid-column: 1 / -1; }
+  label { display: grid; gap: 6px; font-size: 14px; font-weight: 500; }
+  input, textarea { width: 100%; font: 400 16px/1.4 var(--body); color: var(--azul); background: var(--creme); border: 2px solid transparent; border-radius: 12px; padding: 13px 14px; }
+  textarea { min-height: 96px; resize: vertical; }
+  input:focus, textarea:focus { outline: none; border-color: var(--laranja-vivo); }
+  form .btn { width: 100%; height: 56px; }
+  .form__nota { font-size: 14px; opacity: .85; }
+  @media (max-width: 860px) {
+    .pedido .wrap { grid-template-columns: 1fr; gap: 32px; padding: 64px 0 180px; }
+    .pedido__texto { border-right: 0; padding-right: 0; }
+    form { grid-template-columns: 1fr; }
+  }
+
+  footer { background: var(--azul-escuro); color: var(--creme); padding: 28px 0; font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+  footer img { height: 22px; width: auto; }
+</style>
+</head>
+<body>
+<a class="skip" href="#previas">Pular para as prévias</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="nav__logo" href="#topo" aria-label="Site de Bairro, início"><img src="img/marca/logo-grafite-animado.svg" alt="" width="200" height="26"></a>
+    <nav class="nav__links" aria-label="Principal">
+      <a href="#incluso">O que vem</a>
+      <a href="#previas">Prévias</a>
+      <a href="#como">Como funciona</a>
+      <a href="#duvidas">Dúvidas</a>
+      <a class="btn btn--azul" href="#pedido">Pedir minha prévia</a>
+    </nav>
+  </div>
+</header>
+
+<main id="topo">
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="wrap">
+      <div class="hero__phone">
+        <svg class="spark" viewBox="0 0 70 60" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" aria-hidden="true"><path d="M8 10l18 12M4 32h22M10 52l16-10"/></svg>
+        <div class="phone"><img src="img/trabalhos/emporio.webp" alt="Prévia do site de um empório de produtos naturais aberta no celular, com o botão do WhatsApp" fetchpriority="high"></div>
+        <svg class="spark spark--b" viewBox="0 0 70 60" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" aria-hidden="true"><path d="M8 10l18 12M4 32h22M10 52l16-10"/></svg>
+      </div>
+      <div class="hero__text">
+        <h1 id="hero-h">Seu bairro já procura você no celular.</h1>
+        <p class="hero__lead">Eu monto o site do seu comércio, com botão direto pro WhatsApp, e te mostro pronto antes de você pagar.</p>
+        <a class="btn btn--creme" href="#pedido">Pedir minha prévia <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
+        <p class="hero__nota">Prévia sem custo. No ar em até 3 dias úteis.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="vantagens" id="incluso" aria-label="O que vem no seu site">
+    <div class="wrap">
+      <div class="vantagem">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 34l2-7a13 13 0 1 1 5 5z"/><path d="M15 15c0 5 5 10 10 10l2-3-4-2-2 2c-2-1-3-2-4-4l2-2-2-4z"/></svg>
+        <h3>Botão pro WhatsApp</h3>
+        <p>O cliente toca e já cai na conversa com você.</p>
+      </div>
+      <div class="vantagem">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 36s11-10 11-19a11 11 0 0 0-22 0c0 9 11 19 11 19z"/><circle cx="20" cy="17" r="4"/></svg>
+        <h3>Endereço e horários</h3>
+        <p>Tudo que o cliente procura antes de sair de casa.</p>
+      </div>
+      <div class="vantagem">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="12" y="4" width="16" height="32" rx="3"/><path d="M18 31h4"/></svg>
+        <h3>Feito pro celular</h3>
+        <p>Abre rápido e fica certinho na tela do telefone.</p>
+      </div>
+      <div class="vantagem">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 35s-13-8-13-18a7 7 0 0 1 13-4 7 7 0 0 1 13 4c0 10-13 18-13 18z"/></svg>
+        <h3>Sem mensalidade</h3>
+        <p>Hospedagem por minha conta e o endereço do site grátis no 1º ano.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bairro" aria-labelledby="bairro-h">
+    <div class="wrap bairro__head">
+      <h2 id="bairro-h">O comércio do bairro, fácil de achar.</h2>
+      <p>Bicicletaria, barbearia, pet shop, lanchonete ou oficina: um site simples e bonito, com o jeito do seu comércio.</p>
+    </div>
+    <div class="rua">
+      <!-- ilustração própria: três fachadas de bairro, um morro ao fundo -->
+      <svg viewBox="0 0 1440 470" role="img" aria-label="Ilustração de três comércios de bairro lado a lado: uma barbearia, uma floricultura e uma oficina">
+        <defs>
+          <pattern id="toldo" width="44" height="10" patternUnits="userSpaceOnUse"><rect width="22" height="10" fill="#1d3a5f"/><rect x="22" width="22" height="10" fill="#f6efe4"/></pattern>
+          <pattern id="pedra" width="40" height="22" patternUnits="userSpaceOnUse"><rect width="40" height="22" fill="#e9b98c"/><path d="M0 11h40M20 0v11M0 11v11M40 11v11" stroke="#d99a66" stroke-width="2"/></pattern>
+        </defs>
+        <rect width="1440" height="470" fill="#efe3d0"/>
+        <path d="M0 210 C 180 120, 340 150, 470 170 S 760 90, 940 140 S 1250 120, 1440 175 V 300 H 0 Z" fill="#1d3a5f" opacity=".85"/>
+        <path d="M0 250 C 220 200, 420 230, 620 215 S 1000 205, 1440 235 V 300 H 0 Z" fill="#284f7d" opacity=".9"/>
+        <g fill="#f6efe4" opacity=".9"><circle cx="260" cy="90" r="22"/><circle cx="290" cy="84" r="28"/><circle cx="322" cy="92" r="20"/><circle cx="1120" cy="70" r="20"/><circle cx="1150" cy="62" r="27"/><circle cx="1180" cy="72" r="18"/></g>
+        <!-- árvores -->
+        <g><rect x="78" y="250" width="16" height="140" fill="#1d3a5f"/><circle cx="86" cy="230" r="62" fill="#1d3a5f"/><circle cx="56" cy="250" r="38" fill="#284f7d"/></g>
+        <g><rect x="1350" y="250" width="16" height="140" fill="#1d3a5f"/><circle cx="1358" cy="228" r="64" fill="#1d3a5f"/><circle cx="1392" cy="252" r="38" fill="#284f7d"/></g>
+        <!-- loja 1: barbearia -->
+        <g>
+          <rect x="190" y="200" width="330" height="190" fill="url(#pedra)"/>
+          <rect x="180" y="190" width="350" height="16" fill="#c9581f"/>
+          <rect x="230" y="160" width="250" height="40" rx="4" fill="#f6efe4" stroke="#1d3a5f" stroke-width="4"/>
+          <text x="355" y="188" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="22" fill="#1d3a5f" letter-spacing="2">BARBEARIA</text>
+          <path d="M200 230 h310 l-14 34 h-282 z" fill="url(#toldo)"/>
+          <rect x="216" y="280" width="140" height="80" fill="#284f7d"/><rect x="222" y="286" width="128" height="68" fill="#9fc3df" opacity=".55"/>
+          <rect x="380" y="270" width="80" height="120" fill="#1d3a5f"/><circle cx="447" cy="332" r="4" fill="#f4c39a"/>
+          <g transform="translate(486 270)"><rect width="14" height="70" rx="7" fill="#f6efe4" stroke="#1d3a5f" stroke-width="3"/><path d="M2 12 L12 24 M2 30 L12 42 M2 48 L12 60" stroke="#d9531c" stroke-width="5"/></g>
+          <ellipse cx="290" cy="375" rx="40" ry="14" fill="#c9581f"/><path d="M262 372 q28 -40 56 0" fill="#3f7a4d"/>
+        </g>
+        <!-- loja 2: floricultura -->
+        <g>
+          <rect x="560" y="190" width="330" height="200" fill="url(#pedra)"/>
+          <path d="M548 190 L725 140 L902 190 Z" fill="#c9581f"/>
+          <rect x="590" y="168" width="270" height="40" rx="4" fill="#f6efe4" stroke="#1d3a5f" stroke-width="4"/>
+          <text x="725" y="196" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="22" fill="#1d3a5f" letter-spacing="2">FLORICULTURA</text>
+          <path d="M570 222 h310 l-14 34 h-282 z" fill="url(#toldo)"/>
+          <rect x="586" y="272" width="120" height="88" fill="#284f7d"/><rect x="592" y="278" width="108" height="76" fill="#9fc3df" opacity=".55"/>
+          <rect x="730" y="266" width="76" height="124" fill="#1d3a5f"/>
+          <rect x="822" y="272" width="54" height="88" fill="#284f7d"/>
+          <g><rect x="590" y="352" width="112" height="24" fill="#c9581f"/><circle cx="606" cy="346" r="11" fill="#e8604c"/><circle cx="626" cy="340" r="12" fill="#f4c39a"/><circle cx="648" cy="346" r="11" fill="#f6efe4"/><circle cx="670" cy="340" r="12" fill="#e8604c"/><circle cx="690" cy="346" r="10" fill="#f4c39a"/></g>
+          <g><rect x="822" y="356" width="54" height="22" fill="#c9581f"/><circle cx="836" cy="350" r="10" fill="#f6efe4"/><circle cx="858" cy="346" r="11" fill="#e8604c"/></g>
+        </g>
+        <!-- loja 3: oficina -->
+        <g>
+          <rect x="930" y="200" width="330" height="190" fill="url(#pedra)"/>
+          <rect x="920" y="190" width="350" height="16" fill="#c9581f"/>
+          <rect x="985" y="160" width="220" height="40" rx="4" fill="#f6efe4" stroke="#1d3a5f" stroke-width="4"/>
+          <text x="1095" y="188" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="22" fill="#1d3a5f" letter-spacing="2">OFICINA</text>
+          <rect x="960" y="230" width="270" height="160" fill="#1d3a5f"/>
+          <g stroke="#284f7d" stroke-width="4">
+            <path d="M966 250h258M966 268h258M966 286h258M966 304h258M966 322h258M966 340h258M966 358h258M966 376h258"/>
+          </g>
+          <g transform="translate(1238 336)"><circle r="20" fill="#1b2226"/><circle r="8" fill="#555"/></g>
+          <g transform="translate(1238 296)"><circle r="20" fill="#1b2226"/><circle r="8" fill="#555"/></g>
+        </g>
+        <!-- calçada -->
+        <rect x="0" y="388" width="1440" height="82" fill="#e3c9a8"/>
+        <path d="M0 388 H1440" stroke="#c9a77f" stroke-width="4"/>
+        <g stroke="#cfb08c" stroke-width="3"><path d="M120 400 l-30 70M360 400 l-30 70M600 400 l-30 70M840 400 l-30 70M1080 400 l-30 70M1320 400 l-30 70"/></g>
+      </svg>
+      <div class="rua__cards">
+        <div class="rua__card"><strong>Barbearia</strong><p>Horários e agendamento direto pelo WhatsApp.</p></div>
+        <div class="rua__card"><strong>Floricultura</strong><p>Fotos dos arranjos e pedido com um toque.</p></div>
+        <div class="rua__card"><strong>Oficina</strong><p>Serviços, endereço e orçamento pelo WhatsApp.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="previas" id="previas" aria-labelledby="previas-h">
+    <div class="wrap">
+      <div class="previas__top">
+        <div>
+          <h2 id="previas-h">Prévias que eu montei para comércios daqui.</h2>
+          <p>Cada site é feito com as cores, as fotos e o jeito do comércio. Esse é o de um café, aberto no computador.</p>
+          <p class="nota">Os nomes foram trocados para preservar cada comércio.</p>
+        </div>
+        <div class="janela">
+          <div class="janela__barra" aria-hidden="true"><i></i><i></i><i></i></div>
+          <img src="img/trabalhos/passo3.webp" alt="Prévia do site de um café aberta no computador" loading="lazy">
+        </div>
+      </div>
+      <div class="galeria">
+        <a class="mini" href="#pedido"><div class="mini__tela"><img src="img/trabalhos/bicicletaria-390.webp" alt="Prévia do site de uma bicicletaria" loading="lazy"></div><strong>Bicicletaria</strong><span>São José</span></a>
+        <a class="mini" href="#pedido"><div class="mini__tela"><img src="img/trabalhos/oficina-390.webp" alt="Prévia do site de uma oficina mecânica" loading="lazy"></div><strong>Oficina</strong><span>Biguaçu</span></a>
+        <a class="mini" href="#pedido"><div class="mini__tela"><img src="img/trabalhos/pet-shop-390.webp" alt="Prévia do site de um pet shop" loading="lazy"></div><strong>Pet shop</strong><span>Palhoça</span></a>
+        <a class="mini" href="#pedido"><div class="mini__tela"><img src="img/trabalhos/estudio-beleza-390.webp" alt="Prévia do site de um estúdio de beleza" loading="lazy"></div><strong>Estúdio de beleza</strong><span>Palhoça</span></a>
+        <a class="mini" href="#pedido"><div class="mini__tela"><img src="img/trabalhos/emporio-390.webp" alt="Prévia do site de um empório de produtos naturais" loading="lazy"></div><strong>Empório</strong><span>Florianópolis</span></a>
+        <a class="mini" href="#pedido"><div class="mini__tela"><img src="img/trabalhos/reformas-390.webp" alt="Prévia do site de uma empresa de reformas" loading="lazy"></div><strong>Reformas</strong><span>Florianópolis</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="como" id="como" aria-labelledby="como-h">
+    <div class="wrap">
+      <h2 id="como-h">Como funciona</h2>
+      <p>Do primeiro oi ao site no ar, tudo pelo WhatsApp.</p>
+      <ol class="passos">
+        <li class="passo">
+          <span class="passo__icone"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h18v12H12l-5 4v-4H5z"/><path d="M27 14h4v12h-2v4l-5-4h-9v-3"/></svg></span>
+          <h3>1. Você me chama</h3>
+          <p>Me conta o nome do comércio e onde ele fica.</p>
+        </li>
+        <li class="passo">
+          <span class="passo__icone"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="7" width="26" height="17" rx="2"/><path d="M2 28h32"/></svg></span>
+          <h3>2. Eu monto a prévia</h3>
+          <p>Com seus serviços, fotos, endereço e horários. Sem custo.</p>
+        </li>
+        <li class="passo">
+          <span class="passo__icone"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="13"/><path d="M12 18l4 4 8-8"/></svg></span>
+          <h3>3. Você olha e decide</h3>
+          <p>Gostou, a gente fecha. Não gostou, sem problema nenhum.</p>
+        </li>
+        <li class="passo">
+          <span class="passo__icone"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 4c6 4 8 10 7 17l-4 4h-6l-4-4c-1-7 1-13 7-17z"/><circle cx="18" cy="14" r="3"/><path d="M13 25l-4 6 6-2M23 25l4 6-6-2"/></svg></span>
+          <h3>4. Seu site no ar</h3>
+          <p>Em até 3 dias úteis depois do seu ok e do material.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="duvidas" id="duvidas" aria-labelledby="duvidas-h">
+    <div class="wrap">
+      <div class="duvidas__lado">
+        <h2 id="duvidas-h">Dúvidas de quem tem comércio</h2>
+        <p>Ficou alguma? Me chama no WhatsApp que eu respondo.</p>
+      </div>
+      <div class="faq">
+        <div><h3>Quanto custa?</h3><p>Depende do tamanho do comércio. Te passo o valor junto com a prévia, e você só paga se gostar.</p></div>
+        <div><h3>Tem mensalidade?</h3><p>Não. A hospedagem é por minha conta e o endereço do site no primeiro ano também.</p></div>
+        <div><h3>E depois do primeiro ano?</h3><p>Você renova só o endereço do site (o www.sualoja.com.br), uma vez por ano. A hospedagem continua sem custo.</p></div>
+        <div><h3>Preciso entender de internet?</h3><p>Não. Eu monto tudo. Você só manda fotos e informações pelo WhatsApp e aprova.</p></div>
+        <div><h3>Quem faz o site?</h3><p>Eu, Rafael, aqui da Grande Florianópolis. Você fala direto comigo, sem atendente no meio.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pedido" id="pedido" aria-labelledby="pedido-h">
+    <div class="wrap">
+      <div class="pedido__texto">
+        <h2 id="pedido-h">Peça a prévia do seu site.</h2>
+        <p>Preenche aqui e a mensagem já vai pronta pro meu WhatsApp. Eu monto a prévia e te mando, sem custo e sem compromisso.</p>
+      </div>
+      <form id="form-previa" novalidate>
+        <label>Seu nome<input name="nome" autocomplete="name" required></label>
+        <label>Nome do comércio<input name="comercio" required></label>
+        <label class="full">Bairro e cidade<input name="bairro" placeholder="Ex.: Centro, Palhoça" required></label>
+        <label class="full">O que você quer no site? (opcional)<textarea name="obs" placeholder="Ex.: mostrar os serviços e o horário"></textarea></label>
+        <button class="btn btn--laranja full" type="submit">Pedir minha prévia <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></button>
+        <p class="form__nota full">Abre o WhatsApp com a mensagem pronta. É só enviar.</p>
+      </form>
+    </div>
+    <!-- ilustração própria: a ponte Hercílio Luz sobre a água, em linhas creme -->
+    <svg class="ponte" viewBox="0 0 1440 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <g fill="none" stroke="currentColor" stroke-linecap="round" opacity=".55">
+        <path d="M60 150 H1380" stroke-width="5"/>
+        <path d="M420 150 V40 M440 150 V40 M1000 150 V40 M1020 150 V40" stroke-width="6"/>
+        <path d="M410 40 h40 M990 40 h40" stroke-width="6"/>
+        <path d="M430 46 Q 720 190 1010 46" stroke-width="4"/>
+        <path d="M430 46 Q 720 160 1010 46" stroke-width="2.5"/>
+        <path d="M430 46 Q 260 110 60 150 M1010 46 Q 1180 110 1380 150" stroke-width="4"/>
+        <g stroke-width="2"><path d="M520 90 V150 M580 112 V150 M640 125 V150 M700 130 V150 M760 128 V150 M820 120 V150 M880 106 V150 M940 84 V150 M340 78 V150 M260 102 V150 M180 122 V150 M1100 78 V150 M1180 102 V150 M1260 122 V150"/></g>
+      </g>
+      <g stroke="currentColor" stroke-linecap="round" opacity=".35" stroke-width="3">
+        <path d="M30 190 h120 M220 182 h90 M380 196 h160 M620 186 h110 M820 198 h150 M1040 188 h120 M1230 196 h170"/>
+        <path d="M90 218 h100 M300 226 h140 M520 214 h90 M700 228 h160 M940 220 h110 M1140 230 h150"/>
+      </g>
+    </svg>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img src="img/marca/logo-branco.svg" alt="Site de Bairro" width="170" height="22">
+    <span>© 2026 Site de Bairro · Sites para comércios da Grande Florianópolis</span>
+  </div>
+</footer>
+
+<script>
+  // O formulário não guarda nada: só monta a mensagem e abre o WhatsApp do Rafael.
+  document.getElementById('form-previa').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const f = e.target;
+    const faltando = [...f.querySelectorAll('[required]')].filter(i => !i.value.trim());
+    if (faltando.length) { faltando[0].focus(); faltando[0].setCustomValidity('Preencha este campo'); f.reportValidity(); faltando[0].setCustomValidity(''); return; }
+    const d = Object.fromEntries(new FormData(f));
+    let msg = `Oi, Rafael! Quero ver a prévia do site do meu comércio.\n\nNome: ${d.nome}\nComércio: ${d.comercio}\nBairro: ${d.bairro}`;
+    if (d.obs && d.obs.trim()) msg += `\nO que eu quero no site: ${d.obs.trim()}`;
+    window.open('https://wa.me/5548996393533?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+  });
+</script>
+</body>
+</html>
